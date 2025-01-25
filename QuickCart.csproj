@@ -7,8 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="Dapper" Version="2.1.35" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.11"/>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
+        <PackageReference Include="System.Data.SqlClient" Version="4.9.0" />
     </ItemGroup>
 
     <ItemGroup>
@@ -21,9 +23,7 @@
       <Folder Include="src\Application\Services\" />
       <Folder Include="src\Application\Validators\" />
       <Folder Include="src\Core\Exceptions\" />
-      <Folder Include="src\Core\Interfaces\" />
       <Folder Include="src\Infrastructure\Helpers\" />
-      <Folder Include="src\Infrastructure\Repositories\" />
       <Folder Include="src\Infrastructure\Services\" />
     </ItemGroup>
 
