@@ -3,13 +3,13 @@ using QuickCart.Core.Constants;
 
 namespace QuickCart.Core.Entities;
 
-public class Category
+public abstract class Category(ICollection<Category>? subCategories)
 {
     public int CategoryId { get; set; }
     
     [Required (ErrorMessage = "Category name is required")]
     [StringLength(ValidationConstants.MaxNameLength, ErrorMessage = "Category name is too long")]
-    public string Name { get; set; }
+    public string? Name { get; set; }
     
     [StringLength(ValidationConstants.MaxNameLength, ErrorMessage = "Category description is too long")]
     public string? Description { get; set; }
@@ -19,6 +19,6 @@ public class Category
 
     // Navigation properties
     public Category? ParentCategory { get; set; }
-    public ICollection<Category> SubCategories { get; set; }
-    public ICollection<Product> Products { get; set; }
+    public ICollection<Category>? SubCategories { get; set; } = subCategories;
+    public ICollection<Product>? Products { get; set; }
 }

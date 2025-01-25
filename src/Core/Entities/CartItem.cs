@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace QuickCart.Core.Entities;
 
-public class CartItem
+public abstract class CartItem(Product? product)
 {
     public int CartItemId { get; set; }
     public int CartId { get; set; }
@@ -15,6 +15,6 @@ public class CartItem
     public DateTime AddedAt { get; set; }
 
     // Navigation properties
-    public Cart Cart { get; set; }
-    public Product Product { get; set; }
+    public Cart? Cart { get; set; }
+    public Product? Product { get; set; } = product;
 }
