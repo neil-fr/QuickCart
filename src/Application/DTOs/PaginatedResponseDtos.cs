@@ -1,6 +1,6 @@
 namespace QuickCart.Application.DTOs;
 
-public record PaginatedResponseDto<T>(
+public abstract record PaginatedResponseDto<T>(
     List<T> Items,
     int PageNumber,
     int PageSize,

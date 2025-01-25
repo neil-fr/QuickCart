@@ -4,7 +4,7 @@ using QuickCart.Core.Constants;
 
 namespace QuickCart.Application.DTOs;
 
-public record CartItemDto(
+public abstract record CartItemDto(
     int ProductId,
     
     [Required(ErrorMessage = "Product name is required")]

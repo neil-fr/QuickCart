@@ -10,7 +10,7 @@ public record OrderCreateDto(
     List<OrderItemDto> Items
 );
 
-public record OrderItemDto(
+public abstract record OrderItemDto(
     int ProductId,
     
     [Required (ErrorMessage = "Quantity is required")]

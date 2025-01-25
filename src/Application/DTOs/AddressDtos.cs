@@ -3,7 +3,7 @@ using QuickCart.Core.Constants;
 
 namespace QuickCart.Application.DTOs;
 
-public record AddressCreateDto(
+public abstract record AddressCreateDto(
     [Required (ErrorMessage = "Address Line 1 is required")]
     [StringLength(ValidationConstants.MaxAddressLineLength, 
         MinimumLength = ValidationConstants.MinAddressLineLength, ErrorMessage = "Address Line 1 must be at least {2} characters")]

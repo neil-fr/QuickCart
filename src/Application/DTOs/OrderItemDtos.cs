@@ -3,7 +3,7 @@ using QuickCart.Core.Attributes;
 using QuickCart.Core.Constants;
 
 namespace QuickCart.Application.DTOs;
-public record OrderItemDetailDto(
+public abstract record OrderItemDetailDto(
     int OrderItemId,
     int ProductId,
     
