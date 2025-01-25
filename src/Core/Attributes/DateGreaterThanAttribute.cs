@@ -2,23 +2,17 @@ using System.ComponentModel.DataAnnotations;
 
 namespace QuickCart.Core.Attributes;
 
-public class DateGreaterThanAttribute: ValidationAttribute
+public class DateGreaterThanAttribute(string comparisonProperty)
+    : ValidationAttribute
 {
-    private readonly string _comparisonProperty;
-
-    public DateGreaterThanAttribute(string comparisonProperty)
-    {
-        _comparisonProperty = comparisonProperty;
-    }
-
     protected override ValidationResult? IsValid(object? value, ValidationContext context)
     {
         if(value is null) return ValidationResult.Success;
 
         var currentValue = (DateTime)value;
-        var property = context.ObjectType.GetProperty(_comparisonProperty);
+        var property = context.ObjectType.GetProperty(comparisonProperty);
         if(property is null)
-            return new ValidationResult($"Property with name {_comparisonProperty} not found");
+            return new ValidationResult($"Property with name {comparisonProperty} not found");
         
         var comparisonValue = (DateTime)property.GetValue(context.ObjectInstance)!;
 

@@ -4,7 +4,8 @@ namespace QuickCart.Core.Attributes;
 
 public class ValidImageUrlAttribute : ValidationAttribute
 {
-    private readonly string[] _allowedExtensions = { ".jpg", ".jpeg", ".png", ".gif" };
+    private readonly string[] _allowedExtensions = [".jpg", ".jpeg", ".png", ".gif"
+    ];
 
     protected override ValidationResult? IsValid(object? value, ValidationContext context)
     {
