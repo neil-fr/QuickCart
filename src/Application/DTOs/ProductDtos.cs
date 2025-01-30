@@ -6,82 +6,72 @@ namespace QuickCart.Application.DTOs;
 
 public record ProductCreateDto(
     [Required(ErrorMessage = "Product Name is required")]
-    [StringLength(ValidationConstants.MaxNameLength, MinimumLength = 4,
-        ErrorMessage = "Product Name is too long")]
-    string Name,
-    
+    [StringLength(
+        ValidationConstants.MaxNameLength,
+        MinimumLength = 4,
+        ErrorMessage = "Product Name is too long"
+    )]
+        string Name,
     [Required(ErrorMessage = "Product Description is required")]
-    [StringLength(ValidationConstants.MaxNameLength, MinimumLength = 4,
-        ErrorMessage = "Product Description is too long")]
-    string Description,
-    
-    [Required(ErrorMessage = "Product Price is required")]
-    [PriceRange]
-    decimal Price,
-    
+    [StringLength(
+        ValidationConstants.MaxNameLength,
+        MinimumLength = 4,
+        ErrorMessage = "Product Description is too long"
+    )]
+        string Description,
+    [Required(ErrorMessage = "Product Price is required")] [PriceRange] decimal Price,
     int CategoryId,
-    
     [Required(ErrorMessage = "Please enter total stock of this product")]
     [StockValidation]
-    int TotalStock,
-    
+        int TotalStock,
     [Required]
     [MinLength(1, ErrorMessage = "At least one image is required")]
     [ValidImageUrl]
-    List<string> ImageUrls
+        List<string> ImageUrls
 );
 
 public record ProductResponseDto(
     int ProductId,
-    
     [Required(ErrorMessage = "Product Name is required")]
     [StringLength(ValidationConstants.MaxNameLength, ErrorMessage = "Product Name is too long")]
-    string Name,
-    
+        string Name,
     [Required(ErrorMessage = "Product Description is required")]
-    [StringLength(ValidationConstants.MaxNameLength, ErrorMessage = "Product Description is too long")]
-    string Description,
-    
-    [Required(ErrorMessage = "Product Price is required")]
-    [PriceRange]
-    decimal Price,
-    
+    [StringLength(
+        ValidationConstants.MaxNameLength,
+        ErrorMessage = "Product Description is too long"
+    )]
+        string Description,
+    [Required(ErrorMessage = "Product Price is required")] [PriceRange] decimal Price,
+    int CategoryId,
     [Required(ErrorMessage = "Category name is required")]
-    [StringLength(maximumLength:50, ErrorMessage = "Category name is too long")]
-    string CategoryName,
-    
+    [StringLength(maximumLength: 50, ErrorMessage = "Category name is too long")]
+        string CategoryName,
+    int TotalStock,
     [Required(ErrorMessage = "Please enter total stock of this product")]
     [StockValidation]
-    int RemainingStock,
-    
-    bool IsActive,
-    
+        int RemainingStock,
     [Required]
     [MinLength(1, ErrorMessage = "At least one image is required")]
     [ValidImageUrl]
-    List<string> ImageUrls,
-    
-    decimal? CurrentDiscount
+        List<string> ImageUrls,
+    decimal? DiscountPercentage,
+    bool IsActive
 );
 
 public record ProductUpdateDto(
     [Required(ErrorMessage = "Product Name is required")]
     [StringLength(ValidationConstants.MaxNameLength, ErrorMessage = "Product Name is too long")]
-    string Name,
-    
+        string Name,
     [Required(ErrorMessage = "Product Description is required")]
-    [StringLength(ValidationConstants.MaxNameLength, ErrorMessage = "Product Description is too long")]
-    string Description,
-    
-    [Required(ErrorMessage = "Product Price is required")]
-    [PriceRange]
-    decimal Price,
-    
+    [StringLength(
+        ValidationConstants.MaxNameLength,
+        ErrorMessage = "Product Description is too long"
+    )]
+        string Description,
+    [Required(ErrorMessage = "Product Price is required")] [PriceRange] decimal Price,
     int CategoryId,
-    
     [Required(ErrorMessage = "Please enter total stock of this product")]
     [StockValidation]
-    int TotalStock,
-    
+        int TotalStock,
     bool IsActive
 );

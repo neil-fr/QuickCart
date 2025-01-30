@@ -1,3 +1,5 @@
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using QuickCart.Infrastructure.Data;
 
 namespace QuickCart.API.Extensions;
@@ -9,16 +11,16 @@ public static class DatabaseExtensions
         IConfiguration configuration
     )
     {
-        // Bind database secrets from configuration
-        var secrets = new DatabaseSecrets();
-        configuration.GetSection("DatabaseSecrets").Bind(secrets);
+        var databaseConfig = new DatabaseConfig
+        {
+            ConnectionString =
+                configuration.GetConnectionString("DefaultConnection")
+                ?? throw new InvalidOperationException(
+                    "Connection string 'DefaultConnection' not found."
+                ),
+        };
 
-        // Register secrets as singleton
-        services.AddSingleton(secrets);
-
-        // Register database config
-        services.AddSingleton<DatabaseConfig>();
-
+        services.AddSingleton(databaseConfig);
         return services;
     }
 }

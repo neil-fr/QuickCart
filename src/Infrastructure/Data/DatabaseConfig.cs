@@ -1,6 +1,6 @@
 namespace QuickCart.Infrastructure.Data;
 
-public class DatabaseConfig(DatabaseSecrets secrets)
+public class DatabaseConfig
 {
-    public string ConnectionString { get; } = secrets.BuildConnectionString();
+    public string ConnectionString { get; set; } = string.Empty;
 }

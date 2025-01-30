@@ -5,16 +5,13 @@ using QuickCart.Core.Interfaces;
 
 namespace QuickCart.Infrastructure.Data.Repositories;
 
-public class ProductRepository(DatabaseConfig config)
-    : BaseRepository(config), IProductRepository
+public class ProductRepository(DatabaseConfig config) : BaseRepository(config), IProductRepository
 {
-    [Obsolete("Obsolete")]
     public async Task<Product?> GetByIdAsync(int id)
     {
         await using var connection = CreateConnection();
-        const string sql =
-            """
-            
+        const string sql = """
+
                         SELECT p.*, c.Name as CategoryName 
                         FROM Products p
                         LEFT JOIN Categories c ON p.CategoryId = c.CategoryId
@@ -23,35 +20,49 @@ public class ProductRepository(DatabaseConfig config)
         var product = await connection.QuerySingleOrDefaultAsync<Product>(sql, new { Id = id });
         if (product != null)
         {
-            // product images
-            const string imageSql = "SELECT * FROM ProductImages WHERE ProductId = @ProductId";
+            // Load images with a separate query
+            const string imageSql = """
+                    SELECT ImageId, ProductId, ImageUrl, IsMain 
+                    FROM ProductImages 
+                    WHERE ProductId = @ProductId
+                """;
+
             var images = await connection.QueryAsync<ProductImage>(
                 imageSql,
                 new { ProductId = id }
             );
             product.Images = images.ToList();
-            // discount if any
-            const string discountSql =
-                @"
-                SELECT TOP 1 * FROM Discounts 
-                WHERE ProductId = @ProductId 
-                AND StartDate <= GETUTCDATE() 
-                AND EndDate >= GETUTCDATE() 
-                AND IsActive = 1";
-            product.Discounts = (
-                await connection.QueryAsync<Discount>(discountSql, new { ProductId = id })
-            ).ToList();
+
+            // Load discounts with a separate query
+            const string discountSql = """
+    SELECT 
+        DiscountId,
+        ProductId,
+        DiscountPercentage,
+        StartDate,
+        EndDate,
+        IsActive
+    FROM Discounts 
+    WHERE ProductId = @ProductId 
+    AND StartDate <= GETUTCDATE() 
+    AND EndDate >= GETUTCDATE() 
+    AND IsActive = 1
+""";
+
+            var discounts = await connection.QueryAsync<Discount>(
+                discountSql,
+                new { ProductId = id }
+            );
+            product.Discounts = discounts.ToList();
         }
         return product;
     }
 
-    [Obsolete("Obsolete")]
     public async Task<IEnumerable<Product>> GetAllAsync()
     {
         await using var connection = CreateConnection();
-        const string sql =
-            """
-            
+        const string sql = """
+
                         SELECT p.*, c.Name as CategoryName 
                         FROM Products p
                         LEFT JOIN Categories c ON p.CategoryId = c.CategoryId
@@ -61,20 +72,45 @@ public class ProductRepository(DatabaseConfig config)
         return await connection.QueryAsync<Product>(sql);
     }
 
-    [Obsolete("Obsolete")]
     public async Task<int> CreateAsync(Product entity)
     {
         await using var connection = CreateConnection();
-        const string sql =
-            """
-            
-                        INSERT INTO Products (Name, Description, Price, CategoryId, TotalStock, RemainingStock, CreatedAt, IsActive)
-                        VALUES (@Name, @Description, @Price, @CategoryId, @TotalStock, @RemainingStock, GETUTCDATE(), @IsActive);
-                        SELECT CAST(SCOPE_IDENTITY() as int)
+        const string sql = """
+                INSERT INTO Products (
+                    Name, Description, Price, CategoryId, 
+                    TotalStock, RemainingStock, CreatedAt, IsActive
+                ) 
+                VALUES (
+                    @Name, @Description, @Price, @CategoryId, 
+                    @TotalStock, @RemainingStock, @CreatedAt, @IsActive
+                );
+                SELECT CAST(SCOPE_IDENTITY() as int);
             """;
 
         return await connection.QuerySingleAsync<int>(sql, entity);
     }
+
+    // public async Task AddProductImagesAsync(int productId, IEnumerable<ProductImage> images)
+    // {
+    //     await using var connection = CreateConnection();
+    //     const string sql = """
+    //             INSERT INTO ProductImages (ProductId, ImageUrl, IsMain)
+    //             VALUES (@ProductId, @ImageUrl, @IsMain);
+    //         """;
+    //
+    //     foreach (var image in images)
+    //     {
+    //         await connection.ExecuteAsync(
+    //             sql,
+    //             new
+    //             {
+    //                 ProductId = productId,
+    //                 image.ImageUrl,
+    //                 image.IsMain,
+    //             }
+    //         );
+    //     }
+    // }
 
     public Task<IEnumerable<Product>> GetByCategoryAsync(int categoryId)
     {
@@ -106,8 +142,14 @@ public class ProductRepository(DatabaseConfig config)
         throw new NotImplementedException();
     }
 
-    public Task DeleteAsync(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        throw new NotImplementedException();
+        await using var connection = CreateConnection();
+        const string sql = """
+                               DELETE FROM Products 
+                               WHERE ProductId = @Id
+                           """;
+        var rowsAffected = await connection.ExecuteAsync(sql, new { Id = id });
+        return rowsAffected > 0;
     }
 }
