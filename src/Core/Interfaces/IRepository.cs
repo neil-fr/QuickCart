@@ -1,3 +1,5 @@
+using QuickCart.Application.DTOs;
+
 namespace QuickCart.Core.Interfaces;
 
 public interface IRepository<T> where T : class

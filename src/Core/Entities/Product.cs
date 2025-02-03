@@ -24,25 +24,8 @@ public class Product
     [PriceRange]
     public decimal Price { get; init; }
 
-    public int CategoryId { get; init; }
-
     [Required(ErrorMessage = "Please enter total stock of this product")]
     [StockValidation]
     public int TotalStock { get; init; }
-
-    [StockValidation] public int RemainingStock { get; init; }
-
     [DataType(DataType.DateTime)] public DateTime CreatedAt { get; init; }
-
-    [DataType(DataType.DateTime)] public DateTime? UpdatedAt { get; init; }
-
-    public bool IsActive { get; init; }
-
-    // Navigation properties
-    public Category Category { get; init; } = null!;
-
-    public ICollection<ProductImage> Images { get; set; } =
-        new List<ProductImage>();
-
-    public ICollection<Discount> Discounts { get; set; } = new List<Discount>();
 }

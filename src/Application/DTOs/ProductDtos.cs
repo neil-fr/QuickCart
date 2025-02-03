@@ -20,14 +20,10 @@ public record ProductCreateDto(
     )]
         string Description,
     [Required(ErrorMessage = "Product Price is required")] [PriceRange] decimal Price,
-    int CategoryId,
     [Required(ErrorMessage = "Please enter total stock of this product")]
     [StockValidation]
         int TotalStock,
-    [Required]
-    [MinLength(1, ErrorMessage = "At least one image is required")]
-    [ValidImageUrl]
-        List<string> ImageUrls
+        DateTime CreatedAt
 );
 
 public record ProductResponseDto(
@@ -40,23 +36,10 @@ public record ProductResponseDto(
         ValidationConstants.MaxNameLength,
         ErrorMessage = "Product Description is too long"
     )]
-        string Description,
-    [Required(ErrorMessage = "Product Price is required")] [PriceRange] decimal Price,
-    int CategoryId,
-    [Required(ErrorMessage = "Category name is required")]
-    [StringLength(maximumLength: 50, ErrorMessage = "Category name is too long")]
-        string CategoryName,
+    string Description,
+    decimal Price,
     int TotalStock,
-    [Required(ErrorMessage = "Please enter total stock of this product")]
-    [StockValidation]
-        int RemainingStock,
-    [Required]
-    [MinLength(1, ErrorMessage = "At least one image is required")]
-    [ValidImageUrl]
-        List<string> ImageUrls,
-    decimal? DiscountPercentage,
-    bool IsActive
-);
+    DateTime CreatedAt);
 
 public record ProductUpdateDto(
     [Required(ErrorMessage = "Product Name is required")]
@@ -68,10 +51,8 @@ public record ProductUpdateDto(
         ErrorMessage = "Product Description is too long"
     )]
         string Description,
-    [Required(ErrorMessage = "Product Price is required")] [PriceRange] decimal Price,
-    int CategoryId,
-    [Required(ErrorMessage = "Please enter total stock of this product")]
-    [StockValidation]
+        int Price,
         int TotalStock,
-    bool IsActive
+        DateTime CreatedAt
+            
 );
